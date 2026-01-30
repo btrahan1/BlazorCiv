@@ -1,0 +1,64 @@
+{
+    "Name": "CivWheat",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "sheaf_1",
+            "Shape": "Cylinder",
+            "Position": [
+                0.0,
+                0.6,
+                0.0
+            ],
+            "Scale": [
+                0.8,
+                1.2,
+                0.8
+            ],
+            "ColorHex": "#FACC15",
+            "Material": "Leather"
+        },
+        {
+            "Id": "sheaf_2",
+            "Shape": "Cylinder",
+            "Position": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "Rotation": [
+                15,
+                0,
+                15
+            ],
+            "Scale": [
+                0.6,
+                1.0,
+                0.6
+            ],
+            "ColorHex": "#FDE047",
+            "Material": "Leather"
+        },
+        {
+            "Id": "sheaf_3",
+            "Shape": "Cylinder",
+            "Position": [
+                -0.5,
+                0.5,
+                -0.2
+            ],
+            "Rotation": [
+                -15,
+                10,
+                -5
+            ],
+            "Scale": [
+                0.6,
+                1.0,
+                0.6
+            ],
+            "ColorHex": "#EAB308",
+            "Material": "Leather"
+        }
+    ]
+}

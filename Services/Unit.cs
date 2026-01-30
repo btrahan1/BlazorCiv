@@ -7,6 +7,9 @@ namespace BlazorCiv.Services
         Warrior,
         Settler,
         Archer,
+        Chariot,
+        Swordsman,
+        Worker,
         Barbarian
     }
 
@@ -20,11 +23,12 @@ namespace BlazorCiv.Services
         public int R { get; set; }
 
         public string Owner { get; set; } = "Player"; // "Player", "Enemy", "Barbarian"
-        public int MovementPoints { get; set; } = 2;
+        public double MovementPoints { get; set; } = 2.0;
 
         // Combat Stats
         public int Health { get; set; } = 10;
         public int MaxHealth { get; set; } = 10;
         public int AttackPower { get; set; } = 4;
+        public int DefensePower { get; set; } = 3;
     }
 }

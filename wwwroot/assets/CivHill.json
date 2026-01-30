@@ -1,0 +1,73 @@
+{
+"Name": "CivHill",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "hill_base_hex",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.0, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [1.0, 0.05, 1.0],
+"ColorHex": "#AED581",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hill_mound_primary",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.0, 0.0, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.85, 0.5, 0.85],
+"ColorHex": "#AED581",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hill_mound_secondary",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.2, 0.05, -0.15],
+"Rotation": [0, 0, 0],
+"Scale": [0.5, 0.4, 0.5],
+"ColorHex": "#AED581",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hill_mound_tertiary",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [-0.25, 0.02, 0.2],
+"Rotation": [0, 0, 0],
+"Scale": [0.4, 0.3, 0.4],
+"ColorHex": "#AED581",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hill_texture_accent_1",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.1, 0.25, 0.1],
+"Rotation": [10, 45, 0],
+"Scale": [0.02, 0.1, 0.02],
+"ColorHex": "#9CCC65",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hill_texture_accent_2",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.2, 0.15, -0.2],
+"Rotation": [-5, 120, 0],
+"Scale": [0.02, 0.08, 0.02],
+"ColorHex": "#9CCC65",
+"Material": "Plastic",
+"Operation": "Union"
+}
+],
+"Timeline": []
+}

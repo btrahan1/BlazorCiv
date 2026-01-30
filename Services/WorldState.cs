@@ -30,6 +30,12 @@ namespace BlazorCiv.Services
             };
             Cities.Add(city);
 
+            // City always has a road
+            if (Tiles.TryGetValue((city.Q, city.R), out var tile))
+            {
+                tile.HasRoad = true;
+            }
+
             // Consume Unit
             Units.Remove(SelectedUnit);
             SelectedUnit = null;
@@ -59,12 +65,12 @@ namespace BlazorCiv.Services
                     if (dist > radius * 0.8) 
                     {
                         tile.Terrain = TerrainType.Ocean;
-                        tile.Height = 1; // Low
+                        tile.Height = 1; 
                     }
                     else if (noise > 0.85)
                     {
                         tile.Terrain = TerrainType.Mountain;
-                        tile.Height = 5;
+                        tile.Height = 3; // Lowered from 5 to match asset
                     }
                     else if (noise > 0.70)
                     {
@@ -75,6 +81,16 @@ namespace BlazorCiv.Services
                     {
                         tile.Terrain = TerrainType.Grass;
                         tile.Height = 1;
+                    }
+
+                    // Resources
+                    if (tile.Terrain == TerrainType.Grass && random.NextDouble() < 0.10)
+                    {
+                        tile.Resource = ResourceType.Wheat;
+                    }
+                    else if (tile.Terrain == TerrainType.Hill && random.NextDouble() < 0.15)
+                    {
+                        tile.Resource = ResourceType.Iron;
                     }
 
                     Tiles[(q, r)] = tile;
@@ -113,19 +129,108 @@ namespace BlazorCiv.Services
                     Type = UnitType.Barbarian, 
                     Q = t.Q, 
                     R = t.R, 
-                    Owner = "Barbarian" 
+                    Owner = "Barbarian",
+                    Health = 10,
+                    MaxHealth = 10,
+                    AttackPower = 5,
+                    DefensePower = 5 
                 });
             }
         }
         
         public int Turn { get; private set; } = 1;
+        public int Gold { get; private set; } = 0;
+        public int Science { get; private set; } = 0;
+        
+        // Techs
+        public List<TechType> UnlockedTechs { get; private set; } = new List<TechType> { TechType.None };
+        public TechType CurrentResearch { get; set; } = TechType.None;
+        public int ResearchProgress { get; set; } = 0;
+
+        public bool CanResearch(TechType t)
+        {
+            if (UnlockedTechs.Contains(t)) return false; // Already researched
+            
+            // Dependencies
+            switch (t)
+            {
+                case TechType.BronzeWorking: return UnlockedTechs.Contains(TechType.Mining);
+                case TechType.IronWorking: return UnlockedTechs.Contains(TechType.BronzeWorking);
+                case TechType.Writing: return UnlockedTechs.Contains(TechType.Pottery);
+                case TechType.TheWheel: return UnlockedTechs.Contains(TechType.Mining);
+                // Tier 1 (No reqs)
+                case TechType.Mining:
+                case TechType.Pottery:
+                case TechType.Archery:
+                    return true;
+                default: 
+                    return false;
+            }
+        }
+
+        public void UnlockTech(TechType t)
+        {
+            if (!UnlockedTechs.Contains(t)) UnlockedTechs.Add(t);
+        }
+
+        public bool CanBuildUnit(UnitType type)
+        {
+            if (type == UnitType.Archer) return UnlockedTechs.Contains(TechType.Archery);
+            if (type == UnitType.Chariot) return UnlockedTechs.Contains(TechType.TheWheel);
+            if (type == UnitType.Chariot) return UnlockedTechs.Contains(TechType.TheWheel);
+            if (type == UnitType.Swordsman) return UnlockedTechs.Contains(TechType.IronWorking);
+            // Worker defaults to true or requires pottery/mining? Let's say Mining for now to clean forests later?
+            // Actually let's just allow it default.
+            return true; // Settler/Warrior/Worker always unlocked
+        }
+        
+        public bool CanBuildBuilding(BuildingType type)
+        {
+             if (type == BuildingType.Granary) return UnlockedTechs.Contains(TechType.Pottery);
+             if (type == BuildingType.Monument) return UnlockedTechs.Contains(TechType.Writing);
+             if (type == BuildingType.Barracks) return UnlockedTechs.Contains(TechType.BronzeWorking);
+             return true; 
+        }
+
+        public int GetUnitCost(UnitType type)
+        {
+            if (type == UnitType.Settler) return 20;
+            if (type == UnitType.Archer) return 15;
+            if (type == UnitType.Chariot) return 20;
+            if (type == UnitType.Chariot) return 20;
+            if (type == UnitType.Swordsman) return 25;
+            if (type == UnitType.Worker) return 15;
+            return 10; // Warrior
+        }
+
+        public void BuyUnit(City c, UnitType type)
+        {
+            int cost = GetUnitCost(type) * 4; // 4x Gold Cost
+            if (Gold >= cost)
+            {
+                Gold -= cost;
+                var newUnit = new Unit 
+                { 
+                    Id = Units.Count > 0 ? Units.Max(u => u.Id) + 1 : 1, 
+                    Type = type, 
+                    Q = c.Q, 
+                    R = c.R,
+                    Owner = "Player",
+                    MovementPoints = 0 // Can't move immediately
+                };
+                Units.Add(newUnit);
+            }
+        }
 
 
         public City? SelectedCity { get; private set; }
         public Unit? LatestEnemy { get; private set; } // For UI
+        public (int q, int r)? SelectedTileCoords { get; private set; }
 
         public void SelectTile(int q, int r)
         {
+            SelectedTileCoords = (q, r);
+
             // Clear enemy info on new selection
             if (Units.FirstOrDefault(u => u.Q == q && u.R == r) != SelectedUnit)
             {
@@ -169,8 +274,13 @@ namespace BlazorCiv.Services
 
         public void SelectUnitAt(int q, int r)
         {
-            // Deprecated, use SelectTile
-            SelectTile(q, r);
+            SelectedUnit = Units.FirstOrDefault(u => u.Q == q && u.R == r);
+        }
+
+        public bool IsTileHasRoad(int q, int r)
+        {
+            if (Tiles.TryGetValue((q, r), out var t)) return t.HasRoad;
+            return false;
         }
 
         public bool MoveSelectedUnit(int targetQ, int targetR)
@@ -185,20 +295,33 @@ namespace BlazorCiv.Services
             var friendlyUnit = Units.FirstOrDefault(u => u.Q == targetQ && u.R == targetR && u.Owner == SelectedUnit.Owner);
             var city = Cities.FirstOrDefault(c => c.Q == targetQ && c.R == targetR);
 
+            // 1. Prioritize Combat (Attack if enemy nearby)
+            if (dist == 1 && enemyUnit != null)
+            {
+                ResolveCombat(SelectedUnit, enemyUnit);
+                SelectedUnit.MovementPoints = 0; // Attack consumes turn
+                return true;
+            }
+
+            // 2. Movement Logic
             if (dist == 1 && Tiles.ContainsKey((targetQ, targetR)) && friendlyUnit == null && city == null)
             {
-                // COMBAT
-                if (enemyUnit != null)
-                {
-                    ResolveCombat(SelectedUnit, enemyUnit);
-                    SelectedUnit.MovementPoints = 0; // Attack consumes turn
-                    return true;
-                }
+                // MOVE COST
+                double cost = 1.0;
+                
+                // Road Logic
+                bool sourceHasRoad = false;
+                bool targetHasRoad = false;
 
-                // MOVE
+                if (Tiles.TryGetValue((SelectedUnit.Q, SelectedUnit.R), out var srcTile)) sourceHasRoad = srcTile.HasRoad;
+                if (Tiles.TryGetValue((targetQ, targetR), out var destTile)) targetHasRoad = destTile.HasRoad;
+
+                if (sourceHasRoad && targetHasRoad) cost = 0.5;
+
                 SelectedUnit.Q = targetQ;
                 SelectedUnit.R = targetR;
-                SelectedUnit.MovementPoints--;
+                SelectedUnit.MovementPoints -= cost;
+                if (SelectedUnit.MovementPoints < 0) SelectedUnit.MovementPoints = 0;
 
                 // CLEAR CAMP REWARD
                 if (Tiles.TryGetValue((targetQ, targetR), out var tile) && tile.HasBarbarianCamp)
@@ -218,8 +341,8 @@ namespace BlazorCiv.Services
 
             // Simple RNG Combat
             var rand = new Random();
-            int attackerRoll = rand.Next(1, 10) + attacker.AttackPower; // d10 + 4
-            int defenderRoll = rand.Next(1, 10) + defender.AttackPower; // d10 + 4 (if Barbarian)
+            int attackerRoll = rand.Next(1, 10) + attacker.AttackPower; // d10 + Attack
+            int defenderRoll = rand.Next(1, 10) + defender.DefensePower; // d10 + Defense
 
             // Barbarians might be weaker?
             if (defender.Type == UnitType.Barbarian) defenderRoll -= 1; 
@@ -254,6 +377,18 @@ namespace BlazorCiv.Services
             }
         }
 
+        public void BuildRoad()
+        {
+            if (SelectedUnit == null || SelectedUnit.Type != UnitType.Worker) return;
+            if (SelectedUnit.MovementPoints <= 0) return;
+
+            if (Tiles.TryGetValue((SelectedUnit.Q, SelectedUnit.R), out var tile))
+            {
+                tile.HasRoad = true;
+                SelectedUnit.MovementPoints = 0; // Consumes turn
+            }
+        }
+
 
         public void EndTurn()
         {
@@ -268,35 +403,72 @@ namespace BlazorCiv.Services
             // 2. Process Cities
             foreach(var c in Cities)
             {
-                // Simple Growth: +2 Food per turn
-                c.FoodStored += 2;
+                // Calculate Yields
+                var yields = GetCityYields(c);
+
+                // Growth
+                c.FoodStored += yields.food;
                 if (c.FoodStored >= 10 * c.Population)
                 {
                     c.FoodStored = 0;
                     c.Population++;
                 }
 
-                // Simple Production: +2 Prod
-                // If has Granary, +1 Growth or similar (TODO)
-                c.ProductionStored += 2;
+                // Production
+                c.ProductionStored += yields.prod;
+                
+                // Gold
+                Gold += yields.gold;
+                
+                // Science (Global)
+                Science += yields.science;
+                ResearchProgress += yields.science;
+
+                // Check Research Complete (Simplified: 50 science per tech)
+                if (CurrentResearch != TechType.None && ResearchProgress >= 50)
+                {
+                    UnlockTech(CurrentResearch);
+                    CurrentResearch = TechType.None;
+                    ResearchProgress = 0;
+                    // TODO: Notify UI
+                }
 
                 // 1. UNIT PRODUCTION
                 if (c.ProducingUnit.HasValue)
                 {
+                    if (!CanBuildUnit(c.ProducingUnit.Value))
+                    {
+                        c.ProducingUnit = null; // Cancel invalid
+                        continue;
+                    }
+
                     int cost = 10; // Default (Warrior)
                     if (c.ProducingUnit == UnitType.Settler) cost = 20;
                     if (c.ProducingUnit == UnitType.Archer) cost = 15;
+                    if (c.ProducingUnit == UnitType.Chariot) cost = 20;
+                    if (c.ProducingUnit == UnitType.Swordsman) cost = 25;
 
                     if (c.ProductionStored >= cost)
                     {
                         c.ProductionStored -= cost;
                         var newUnit = new Unit 
                         { 
-                            Id = Units.Count > 0 ? Units.Max(u => u.Id) + 1 : 1, // Fix empty list crash
+                            Id = Units.Count > 0 ? Units.Max(u => u.Id) + 1 : 1, 
                             Type = c.ProducingUnit.Value, 
                             Q = c.Q, 
                             R = c.R 
                         };
+                        
+                        // Set Stats Based on Type
+                        switch (newUnit.Type)
+                        {
+                            case UnitType.Warrior: newUnit.Health = 12; newUnit.MaxHealth = 12; newUnit.AttackPower = 6; newUnit.DefensePower = 8; break;
+                            case UnitType.Archer: newUnit.Health = 8; newUnit.MaxHealth = 8; newUnit.AttackPower = 8; newUnit.DefensePower = 4; break;
+                            case UnitType.Settler: newUnit.Health = 5; newUnit.MaxHealth = 5; newUnit.AttackPower = 0; newUnit.DefensePower = 1; break;
+                            case UnitType.Chariot: newUnit.Health = 10; newUnit.MaxHealth = 10; newUnit.AttackPower = 10; newUnit.DefensePower = 5; break;
+                            case UnitType.Swordsman: newUnit.Health = 15; newUnit.MaxHealth = 15; newUnit.AttackPower = 10; newUnit.DefensePower = 10; break;
+                        }
+
                         Units.Add(newUnit);
                         c.ProducingUnit = null; // Reset
                     }
@@ -304,6 +476,12 @@ namespace BlazorCiv.Services
                 // 2. BUILDING PRODUCTION
                 else if (c.ProducingBuilding.HasValue)
                 {
+                    if (!CanBuildBuilding(c.ProducingBuilding.Value))
+                    {
+                        c.ProducingBuilding = null;
+                        continue;
+                    }
+
                     int cost = 0;
                     if (c.ProducingBuilding == BuildingType.Granary) cost = 12;
                     if (c.ProducingBuilding == BuildingType.Barracks) cost = 15;
@@ -334,7 +512,9 @@ namespace BlazorCiv.Services
                     r = t.R, 
                     type = t.Terrain.ToString(), 
                     height = t.Height,
-                    hasCamp = t.HasBarbarianCamp
+                    hasCamp = t.HasBarbarianCamp,
+                    hasRoad = t.HasRoad,
+                    resource = t.Resource.ToString()
                 });
             }
             return list.ToArray();
@@ -368,5 +548,87 @@ namespace BlazorCiv.Services
                  };
             }).ToArray();
         }
+
+        public (int food, int prod, int gold, int science) GetCityYields(City c)
+        {
+            int food = 2; // City Center Base
+            int prod = 1;
+            int gold = 2; // City Center Base Gold
+            int science = 1; // Base Science
+
+            // Population Bonus
+            science += c.Population / 2;
+
+            // Add Center Tile Yields (User Request: Building on resources gives them)
+            if (Tiles.TryGetValue((c.Q, c.R), out var centerTile))
+            {
+                var centerYield = GetTileYield(centerTile);
+                food += centerYield.food;
+                prod += centerYield.prod;
+                gold += centerYield.gold;
+            }
+
+            // Building Bonuses
+            if (c.HasGranary) food += 2;
+            if (c.HasBarracks) prod += 1; // Training supplies?
+            if (c.HasMonument) prod += 1; // Cultural inspiration?
+            if (c.HasMonument) science += 1; // Monument gives science too? Why not.
+
+            // Directions for neighbors in Axial
+            var directions = new (int q, int r)[] {
+                (1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)
+            };
+
+            foreach (var d in directions)
+            {
+                var nQ = c.Q + d.q;
+                var nR = c.R + d.r;
+
+                if (Tiles.TryGetValue((nQ, nR), out var tile))
+                {
+                    var y = GetTileYield(tile);
+                    food += y.food;
+                    prod += y.prod;
+                    gold += y.gold;
+                    // Science from terrain? Maybe later.
+                }
+            }
+            return (food, prod, gold, science);
+        }
+
+        private (int food, int prod, int gold) GetTileYield(HexTile t)
+        {
+            int f = 0;
+            int p = 0;
+            int g = 0;
+
+            // Terrain Base
+            switch (t.Terrain)
+            {
+                case TerrainType.Grass: f = 1; break;
+                case TerrainType.Ocean: g = 1; f = 1; break; 
+                case TerrainType.Coast: g = 1; f = 1; break;
+                case TerrainType.Hill: p = 1; break;
+                // Mountain/Snow = 0
+            }
+
+            // Resources
+            if (t.Resource == ResourceType.Wheat) f += 1;
+            if (t.Resource == ResourceType.Iron) p += 1;
+
+            return (f, p, g);
+        }
+    }
+
+    public enum TechType
+    {
+        None,
+        Pottery,
+        Mining,
+        Archery,
+        Writing,
+        BronzeWorking,
+        TheWheel,
+        IronWorking
     }
 }

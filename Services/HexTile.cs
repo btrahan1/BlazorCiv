@@ -26,6 +26,15 @@ namespace BlazorCiv.Services
         
         // Gameplay
         public bool IsExplored { get; set; } = true; // Visible for now
+        public bool HasRoad { get; set; }
         public bool HasBarbarianCamp { get; set; }
+        public ResourceType Resource { get; set; }
+    }
+
+    public enum ResourceType
+    {
+        None,
+        Wheat,
+        Iron
     }
 }

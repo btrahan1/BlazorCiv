@@ -1,0 +1,73 @@
+{
+"Name": "CivSnow",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "snow_base_hex",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.0, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [1.0, 0.05, 1.0],
+"ColorHex": "#FFFFFF",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_drift_main",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.1, 0.02, 0.1],
+"Rotation": [0, 45, 0],
+"Scale": [0.7, 0.15, 0.6],
+"ColorHex": "#FFFFFF",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_drift_secondary",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [-0.25, 0.01, -0.2],
+"Rotation": [0, 160, 0],
+"Scale": [0.5, 0.12, 0.4],
+"ColorHex": "#F5F5F5",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_bump_1",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.3, 0.03, -0.15],
+"Rotation": [0, 0, 0],
+"Scale": [0.2, 0.1, 0.2],
+"ColorHex": "#FFFFFF",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_bump_2",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [-0.1, 0.03, 0.35],
+"Rotation": [0, 0, 0],
+"Scale": [0.15, 0.08, 0.15],
+"ColorHex": "#ECEFF1",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_ridge",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.3, 0.02, 0.1],
+"Rotation": [0, 10, 90],
+"Scale": [0.05, 0.3, 0.05],
+"ColorHex": "#F5F5F5",
+"Material": "Plastic",
+"Operation": "Union"
+}
+],
+"Timeline": []
+}

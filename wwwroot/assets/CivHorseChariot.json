@@ -1,0 +1,179 @@
+{
+"Name": "CivHorseChariot",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "chariot_floor",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 0.45, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [1.0, 0.1, 1.2],
+"ColorHex": "#78350F",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "wheel_l",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.6, 0.4, 0.0],
+"Rotation": [0.0, 0.0, 90.0],
+"Scale": [0.8, 0.1, 0.8],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "wheel_r",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [-0.6, 0.4, 0.0],
+"Rotation": [0.0, 0.0, 90.0],
+"Scale": [0.8, 0.1, 0.8],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "front_guard",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 0.85, 0.55],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [1.0, 0.7, 0.1],
+"ColorHex": "#92400E",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "tongue_pole",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.45, 1.2],
+"Rotation": [90.0, 0.0, 0.0],
+"Scale": [0.06, 1.8, 0.06],
+"ColorHex": "#5C4033",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "small_horse_body",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.0, 0.75, 2.1],
+"Rotation": [90.0, 0.0, 0.0],
+"Scale": [0.35, 0.8, 0.35],
+"ColorHex": "#A16207",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "small_horse_neck",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 1.0, 2.4],
+"Rotation": [45.0, 0.0, 0.0],
+"Scale": [0.15, 0.4, 0.15],
+"ColorHex": "#A16207",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "small_horse_head",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 1.25, 2.55],
+"Rotation": [10.0, 0.0, 0.0],
+"Scale": [0.18, 0.22, 0.35],
+"ColorHex": "#78350F",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "horse_leg_fl",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.12, 0.35, 2.3],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.08, 0.7, 0.08],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "horse_leg_fr",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [-0.12, 0.35, 2.3],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.08, 0.7, 0.08],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "horse_leg_bl",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.12, 0.35, 1.9],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.08, 0.7, 0.08],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "horse_leg_br",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [-0.12, 0.35, 1.9],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.08, 0.7, 0.08],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "yoke_crossbar",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 0.85, 2.2],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.5, 0.05, 0.1],
+"ColorHex": "#27272A",
+"Material": "Metal",
+"Operation": "Union"
+}
+],
+"Timeline": [
+{
+"Time": 0.0,
+"Action": "Rotate",
+"TargetId": "wheel_l",
+"Value": [0.0, 0.0, 360.0],
+"Duration": 1.5
+},
+{
+"Time": 0.0,
+"Action": "Rotate",
+"TargetId": "wheel_r",
+"Value": [0.0, 0.0, 360.0],
+"Duration": 1.5
+},
+{
+"Time": 0.0,
+"Action": "Move",
+"TargetId": "small_horse_body",
+"Value": [0.0, 0.78, 2.1],
+"Duration": 0.4
+},
+{
+"Time": 0.4,
+"Action": "Move",
+"TargetId": "small_horse_body",
+"Value": [0.0, 0.75, 2.1],
+"Duration": 0.4
+}
+]
+}

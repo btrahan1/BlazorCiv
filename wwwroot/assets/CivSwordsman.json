@@ -1,0 +1,176 @@
+{
+"Name": "CivSwordsman",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "torso_armor",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 1.0, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.5, 0.65, 0.35],
+"ColorHex": "#F8FAFC",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "head",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.0, 1.45, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.22, 0.22, 0.22],
+"ColorHex": "#FFDBAC",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "helmet_shiny",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 1.6, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.26, 0.2, 0.26],
+"ColorHex": "#F8FAFC",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "helmet_crest",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 1.75, -0.05],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.05, 0.15, 0.3],
+"ColorHex": "#DC2626",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "pauldron_l",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.3, 1.25, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.25, 0.2, 0.25],
+"ColorHex": "#F8FAFC",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "pauldron_r",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [-0.3, 1.25, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.25, 0.2, 0.25],
+"ColorHex": "#F8FAFC",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "leg_l",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.15, 0.4, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.18, 0.8, 0.18],
+"ColorHex": "#94A3B8",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "leg_r",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.15, 0.4, 0.0],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.18, 0.8, 0.18],
+"ColorHex": "#94A3B8",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "arm_holding_l",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.25, 1.1, 0.2],
+"Rotation": [-50.0, 25.0, 0.0],
+"Scale": [0.12, 0.6, 0.12],
+"ColorHex": "#94A3B8",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "arm_holding_r",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.25, 1.1, 0.2],
+"Rotation": [-50.0, -25.0, 0.0],
+"Scale": [0.12, 0.6, 0.12],
+"ColorHex": "#94A3B8",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "greatsword_pommel",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.0, 0.55, 0.45],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.08, 0.08, 0.08],
+"ColorHex": "#EAB308",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "greatsword_grip",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.85, 0.45],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.045, 0.6, 0.045],
+"ColorHex": "#451A03",
+"Material": "Leather",
+"Operation": "Union"
+},
+{
+"Id": "greatsword_guard",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 1.15, 0.45],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.6, 0.06, 0.1],
+"ColorHex": "#CBD5E1",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "greatsword_blade",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 2.0, 0.45],
+"Rotation": [0.0, 0.0, 0.0],
+"Scale": [0.18, 1.8, 0.03],
+"ColorHex": "#F1F5F9",
+"Material": "Metal",
+"Operation": "Union"
+}
+],
+"Timeline": [
+{
+"Time": 0.0,
+"Action": "Rotate",
+"TargetId": "torso_armor",
+"Value": [0.0, 5.0, 0.0],
+"Duration": 1.5
+},
+{
+"Time": 1.5,
+"Action": "Rotate",
+"TargetId": "torso_armor",
+"Value": [0.0, -5.0, 0.0],
+"Duration": 1.5
+}
+]
+}

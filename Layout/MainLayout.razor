@@ -8,14 +8,115 @@
 <div class="ui-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
     @Body
     
-    <!-- Top Right: Unit Info -->
+    <!-- Top Bar: Resources -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:40px; background:rgba(0,0,0,0.9); border-bottom:1px solid #444; display:flex; align-items:center; padding:0 20px; gap:20px; pointer-events:auto; z-index:200;">
+        <div class="fw-bold text-warning">💰 @World.Gold Gold</div>
+        <div class="fw-bold text-info">🧪 @World.Science Science</div>
+        <div class="text-muted small ms-auto">Turn @World.Turn</div>
+    </div>
+
+    <!-- Tech Tree Modal -->
+    @if (IsResearchOpen)
+    {
+        <div style="position:absolute; top:40px; left:0; width:100%; height:calc(100% - 40px); background:rgba(0,0,10,0.95); z-index:300; pointer-events:auto; padding:40px; display:flex; flex-direction:column;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-info"><span class="fs-1">⚡</span> Technology Tree</h2>
+                <button class="btn btn-outline-light" @onclick="() => IsResearchOpen = false">Close [X]</button>
+            </div>
+            
+            <div class="d-flex gap-5 overflow-auto h-100">
+                <!-- Column 1: Ancient Era (Basics) -->
+                <div class="d-flex flex-column gap-3" style="min-width:200px;">
+                    <h5 class="text-muted border-bottom">Tools</h5>
+                    
+                    <!-- Mining -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.Mining)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.Mining)'>
+                        <div class="fw-bold">⛏️ Mining</div>
+                        <div class="small text-muted">Cost: 25 🧪</div>
+                    </div>
+
+                    <!-- Pottery -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.Pottery)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.Pottery)'>
+                        <div class="fw-bold">🏺 Pottery</div>
+                        <div class="small text-muted">Cost: 25 🧪</div>
+                        <div class="small text-info">Unlocks: Granary</div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Military/Civic -->
+                <div class="d-flex flex-column gap-3" style="min-width:200px;">
+                    <h5 class="text-muted border-bottom">Military</h5>
+                    
+                    <!-- Archery -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.Archery)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.Archery)'>
+                        <div class="fw-bold">🏹 Archery</div>
+                        <div class="small text-muted">Cost: 35 🧪</div>
+                        <div class="small text-info">Unlocks: Archer</div>
+                    </div>
+
+                    <!-- Bronze Working (Req: Mining) -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.BronzeWorking)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.BronzeWorking)'>
+                        <div class="fw-bold">🛡️ Bronze Working</div>
+                        @if(!World.CanResearch(BlazorCiv.Services.TechType.BronzeWorking) && !World.UnlockedTechs.Contains(BlazorCiv.Services.TechType.BronzeWorking)) {
+                            <div class="small text-danger">Requires: Mining</div>
+                        } else {
+                            <div class="small text-muted">Cost: 50 🧪</div>
+                            <div class="small text-info">Unlocks: Barracks</div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Column 3: Advanced -->
+                <div class="d-flex flex-column gap-3" style="min-width:200px;">
+                    <h5 class="text-muted border-bottom">Advanced</h5>
+                    
+                    <!-- Writing (Req: Pottery) -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.Writing)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.Writing)'>
+                        <div class="fw-bold">📜 Writing</div>
+                        @if(!World.CanResearch(BlazorCiv.Services.TechType.Writing) && !World.UnlockedTechs.Contains(BlazorCiv.Services.TechType.Writing)) {
+                             <div class="small text-danger">Requires: Pottery</div>
+                        } else {
+                            <div class="small text-muted">Cost: 50 🧪</div>
+                            <div class="small text-info">Unlocks: Monument</div>
+                        }
+                    </div>
+
+                    <!-- The Wheel (Req: Mining) -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.TheWheel)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.TheWheel)'>
+                        <div class="fw-bold">☸️ The Wheel</div>
+                         @if(!World.CanResearch(BlazorCiv.Services.TechType.TheWheel) && !World.UnlockedTechs.Contains(BlazorCiv.Services.TechType.TheWheel)) {
+                             <div class="small text-danger">Requires: Mining</div>
+                        } else {
+                            <div class="small text-muted">Cost: 50 🧪</div>
+                            <div class="small text-info">Unlocks: Chariot</div>
+                        }
+                    </div>
+
+                    <!-- Iron Working (Req: Bronze Working) -->
+                    <div class="card p-3 @GetTechClass(BlazorCiv.Services.TechType.IronWorking)" @onclick='() => SetResearch(BlazorCiv.Services.TechType.IronWorking)'>
+                         <div class="fw-bold">⚔️ Iron Working</div>
+                         @if(!World.CanResearch(BlazorCiv.Services.TechType.IronWorking) && !World.UnlockedTechs.Contains(BlazorCiv.Services.TechType.IronWorking)) {
+                             <div class="small text-danger">Requires: Bronze Working</div>
+                        } else {
+                            <div class="small text-muted">Cost: 50 🧪</div>
+                            <div class="small text-info">Unlocks: Swordsman</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Top Right: Unit Info (Pushed down by top bar) -->
     @if (World.SelectedUnit != null)
     {
-        <div style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
+        <div style="position:absolute; top:60px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
             <h5>@World.SelectedUnit.Type</h5>
+            <!-- ... existing unit info ... -->
             <div class="mb-1">
                  ❤️ <b>@World.SelectedUnit.Health</b> / @World.SelectedUnit.MaxHealth 
-                 <span class="ms-2">⚔️ @World.SelectedUnit.AttackPower</span>
+                 <span class="ms-1">⚔️ @World.SelectedUnit.AttackPower</span>
+                 <span class="ms-1">🛡️ @World.SelectedUnit.DefensePower</span>
             </div>
             <div class="progress mb-2" style="height: 6px;">
                 <div class="progress-bar bg-danger" style="width: @(World.SelectedUnit.Health * 100 / Math.Max(1, World.SelectedUnit.MaxHealth))%"></div>
@@ -26,6 +127,11 @@
             @if (World.SelectedUnit.Type == BlazorCiv.Services.UnitType.Settler)
             {
                  <button class="btn btn-success w-100 mt-2" @onclick="FoundCity">Build City</button>
+            }
+
+            @if (World.SelectedUnit.Type == BlazorCiv.Services.UnitType.Worker && !World.IsTileHasRoad(World.SelectedUnit.Q, World.SelectedUnit.R))
+            {
+                 <button class="btn btn-secondary w-100 mt-2" @onclick="BuildRoad" disabled="@(World.SelectedUnit.MovementPoints <= 0)">Build Road</button>
             }
 
             @if (World.LatestEnemy != null)
@@ -43,10 +149,13 @@
         </div>
     }
 
+    <!-- Top Right: City Info (Pushed down) -->
+
+
     <!-- Top Right: City Info -->
     @if (World.SelectedCity != null)
     {
-        <div style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
+        <div style="position:absolute; top:60px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
             <h5>@World.SelectedCity.Name</h5>
             <div class="mb-2">Population: @World.SelectedCity.Population</div>
             <div class="progress mb-2" style="height:10px;">
@@ -54,6 +163,14 @@
             </div>
             <div class="small text-muted">Food: @World.SelectedCity.FoodStored / @(World.SelectedCity.Population * 10)</div>
             
+            @{ var yields = World.GetCityYields(World.SelectedCity); }
+            <div class="d-flex justify-content-between my-2 p-2 bg-secondary bg-opacity-25 rounded">
+                <span class="text-success fw-bold">🌾 +@yields.food</span>
+                <span class="text-warning fw-bold">🔨 +@yields.prod</span>
+                <span class="text-warning text-opacity-75 fw-bold">💰 +@yields.gold</span>
+                <span class="text-info fw-bold">🧪 +@yields.science</span>
+            </div>
+
             <hr style="border-color:white;"/>
             <div class="mb-2">
                 Production: 
@@ -69,15 +186,26 @@
 
             <div class="d-flex flex-wrap gap-2 mb-2">
                 <span class="badge bg-secondary">Units</span>
-                <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Warrior)'>Warrior (10)</button>
-                <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Archer)'>Archer (15)</button>
-                <button class="btn btn-sm btn-success" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Settler)'>Settler (20)</button>
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Warrior)) { <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Warrior)'>Warrior (10)</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Archer)) { <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Archer)'>Archer (15)</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Chariot)) { <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Chariot)'>Chariot (20)</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Swordsman)) { <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Swordsman)'>Swordsman (25)</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Worker)) { <button class="btn btn-sm btn-secondary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Worker)'>Worker (15)</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Settler)) { <button class="btn btn-sm btn-success" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Settler)'>Settler (20)</button> }
+            </div>
+            
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <span class="badge bg-secondary">Buy (4x)</span>
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Warrior)) { <button class="btn btn-sm btn-outline-warning" @onclick='() => BuyUnit(BlazorCiv.Services.UnitType.Warrior)'>⚔️ 40g</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Archer)) { <button class="btn btn-sm btn-outline-warning" @onclick='() => BuyUnit(BlazorCiv.Services.UnitType.Archer)'>🏹 60g</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Worker)) { <button class="btn btn-sm btn-outline-warning" @onclick='() => BuyUnit(BlazorCiv.Services.UnitType.Worker)'>🔨 60g</button> }
+                @if(World.CanBuildUnit(BlazorCiv.Services.UnitType.Settler)) { <button class="btn btn-sm btn-outline-warning" @onclick='() => BuyUnit(BlazorCiv.Services.UnitType.Settler)'>🏴 80g</button> }
             </div>
             <div class="d-flex flex-wrap gap-2">
                 <span class="badge bg-secondary">Buildings</span>
-                @if (!World.SelectedCity.HasMonument) { <button class="btn btn-sm btn-info" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Monument)'>Monument (8)</button> }
-                @if (!World.SelectedCity.HasGranary) { <button class="btn btn-sm btn-warning" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Granary)'>Granary (12)</button> }
-                @if (!World.SelectedCity.HasBarracks) { <button class="btn btn-sm btn-danger" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Barracks)'>Barracks (15)</button> }
+                @if (!World.SelectedCity.HasMonument && World.CanBuildBuilding(BlazorCiv.Services.BuildingType.Monument)) { <button class="btn btn-sm btn-info" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Monument)'>Monument (8)</button> }
+                @if (!World.SelectedCity.HasGranary && World.CanBuildBuilding(BlazorCiv.Services.BuildingType.Granary)) { <button class="btn btn-sm btn-warning" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Granary)'>Granary (12)</button> }
+                @if (!World.SelectedCity.HasBarracks && World.CanBuildBuilding(BlazorCiv.Services.BuildingType.Barracks)) { <button class="btn btn-sm btn-danger" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Barracks)'>Barracks (15)</button> }
             </div>
 
             @if (World.SelectedCity.HasMonument || World.SelectedCity.HasGranary || World.SelectedCity.HasBarracks)
@@ -93,14 +221,54 @@
         </div>
     }
 
+    <!-- Bottom Left: Tile Inspector -->
+    @if (World.SelectedTileCoords.HasValue && World.Tiles.ContainsKey(World.SelectedTileCoords.Value))
+    {
+        var t = World.Tiles[World.SelectedTileCoords.Value];
+        <div style="position:absolute; bottom:20px; left:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:none; min-width:180px;">
+            <div class="text-uppercase small text-muted mb-1">Tile Inspector</div>
+            <h4>@t.Terrain</h4>
+            <div class="mb-2">
+                @if (t.Resource != BlazorCiv.Services.ResourceType.None)
+                {
+                    <span class="badge bg-warning text-dark">@t.Resource</span>
+                }
+                else
+                {
+                    <span class="text-muted small">No Resources</span>
+                }
+            </div>
+            
+            <div class="small">
+                <div>Coords: @t.Q, @t.R</div>
+                <div>Height: @t.Height</div>
+                @if (t.HasBarbarianCamp) { <div class="text-danger fw-bold">⚠️ Barbarian Camp</div> }
+            </div>
+        </div>
+    }
+
     <!-- Bottom Right: End Turn -->
     <div style="position:absolute; bottom:20px; right:20px; z-index:100; display:flex; gap:10px; pointer-events:auto;">
-        <button class="btn btn-warning btn-lg" @onclick="EndTurn">End Turn @World.Turn ⏳</button>
-        <button class="btn btn-secondary btn-sm" @onclick="GenerateNewMap">New World</button>
+        <!-- Turn Button -->
+        <button class="btn btn-warning btn-lg shadow" @onclick="EndTurn">End Turn ⏳</button>
+        
+        <!-- Tech Button -->
+        <button class="btn btn-info shadow border border-white" @onclick="() => IsResearchOpen = true">
+            @if(World.CurrentResearch == BlazorCiv.Services.TechType.None) { <span>🧪 Choose Research</span> }
+            else { <span>🧪 @World.CurrentResearch (@World.ResearchProgress/50)</span> }
+        </button>
+        
+        <button class="btn btn-secondary btn-sm" @onclick="StartNewGame">New World</button>
     </div>
 </div>
 
 @code {
+    private string GetTechClass(BlazorCiv.Services.TechType t)
+    {
+        if (World.UnlockedTechs.Contains(t)) return "opacity-50 border-success";
+        if (World.CurrentResearch == t) return "border-info shadow";
+        return "opacity-100";
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -108,49 +276,46 @@
             await Task.Delay(100); 
             var dotNetRef = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("CivEngine.init", "civ-container", dotNetRef);
-            await GenerateNewMap();
+            await StartNewGame();
         }
     }
 
     [JSInvokable]
     public async Task OnHexClicked(int q, int r)
     {
-        // 1. Logic: Select or Move
+        // Left Click: STRICTLY Select Tile / City
+        World.SelectTile(q, r);
+        
+        await RefreshView();
+        StateHasChanged(); // Update HUD
+    }
+
+    [JSInvokable]
+    public async Task OnHexRightClicked(int q, int r)
+    {
+        // Right Click: UNIT Interaction
         if (World.SelectedUnit == null)
         {
-            World.SelectTile(q, r);
+            // Try select unit (Any unit if none selected)
+            World.SelectUnitAt(q, r);
         }
         else
         {
-            // If unit selected, try to move
-            bool moved = World.MoveSelectedUnit(q, r);
+            // If unit selected, try to move/attack first
+            bool actionTaken = World.MoveSelectedUnit(q, r);
             
-            // UX Polish: If move failed, decide whether to switch selection
-            if (!moved) 
+            if (!actionTaken)
             {
-                // Calculate distance to click
-                var u = World.SelectedUnit;
-                int dist = (Math.Abs(u.Q - q) + Math.Abs(u.Q + u.R - q - r) + Math.Abs(u.R - r)) / 2;
-                
-                // Is there an enemy there?
-                var targetUnit = World.Units.FirstOrDefault(x => x.Q == q && x.R == r);
-                bool isEnemy = targetUnit != null && targetUnit.Owner != u.Owner;
-
-                // If clicking an adjacent enemy (trying to attack), preserve selection!
-                // This lets the user see "0 Moves" or retry without re-selecting.
-                if (dist <= 1 && isEnemy) 
+                // If move failed, only switch selection if it's a DIFFERENT friendly unit
+                var targetUnit = World.Units.FirstOrDefault(u => u.Q == q && u.R == r);
+                if (targetUnit != null && targetUnit.Owner == World.SelectedUnit.Owner && targetUnit != World.SelectedUnit)
                 {
-                    // Do nothing (Keep Unit Selected)
+                    World.SelectUnitAt(q, r);
                 }
-                else
-                {
-                    // Otherwise (clicked terrain, distant unit, ally), switch selection
-                    World.SelectTile(q, r); 
-                }
-            } 
+            }
         }
 
-        await RefreshView();
+        await RefreshView(); // Update visuals (MP, positions)
         StateHasChanged(); // Update HUD
     }
 
@@ -159,6 +324,13 @@
         World.FoundCity();
         await RefreshView();
         StateHasChanged();
+    }
+
+    private void BuildRoad()
+    {
+        World.BuildRoad();
+        StateHasChanged(); 
+        _ = RenderMap(); // Just re-render visuals, don't regenerate map! 
     }
 
     private async Task EndTurn()
@@ -188,6 +360,16 @@
         }
     }
 
+    private async Task BuyUnit(BlazorCiv.Services.UnitType type)
+    {
+        if (World.SelectedCity != null)
+        {
+            World.BuyUnit(World.SelectedCity, type);
+            await RefreshView();
+            StateHasChanged();
+        }
+    }
+
     private async Task RefreshView()
     {
         // Units
@@ -199,12 +381,28 @@
         await JS.InvokeVoidAsync("CivEngine.renderCities", new object[] { cities });
     }
 
-    private async Task GenerateNewMap()
+    private bool IsResearchOpen = false;
+
+    private void SetResearch(BlazorCiv.Services.TechType t)
+    {
+        if (World.CurrentResearch == t) return;
+        if (!World.CanResearch(t) && !World.UnlockedTechs.Contains(t)) return;
+
+        World.CurrentResearch = t;
+        IsResearchOpen = false;
+        StateHasChanged();
+    }
+
+    private async Task StartNewGame()
     {
         // 1. C# Logic
         World.GenerateMap(12); // Radius 12
-        var data = World.GetRenderData();
+        await RenderMap(); // Updated to call helper
+    }
 
+    private async Task RenderMap()
+    {
+        var data = World.GetRenderData();
         // 2. JS Render
         await JS.InvokeVoidAsync("CivEngine.renderMap", new object[] { data });
         await RefreshView();

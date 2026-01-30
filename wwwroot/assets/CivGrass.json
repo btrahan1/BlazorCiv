@@ -1,0 +1,73 @@
+{
+"Name": "CivGrass",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "tile_base_hex",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.0, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [1.0, 0.05, 1.0],
+"ColorHex": "#4CAF50",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "grass_tuft_1a",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.25, 0.025, 0.2],
+"Rotation": [15, 45, 0],
+"Scale": [0.01, 0.1, 0.01],
+"ColorHex": "#81C784",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "grass_tuft_1b",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.28, 0.025, 0.18],
+"Rotation": [-10, 10, 0],
+"Scale": [0.01, 0.08, 0.01],
+"ColorHex": "#81C784",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "grass_tuft_2",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.3, 0.025, -0.15],
+"Rotation": [5, 180, 5],
+"Scale": [0.01, 0.12, 0.01],
+"ColorHex": "#81C784",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "flower_stem",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [-0.1, 0.025, 0.35],
+"Rotation": [0, 0, 0],
+"Scale": [0.005, 0.06, 0.005],
+"ColorHex": "#4CAF50",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "flower_petal_center",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [-0.1, 0.085, 0.35],
+"Rotation": [0, 0, 0],
+"Scale": [0.03, 0.02, 0.03],
+"ColorHex": "#FFEB3B",
+"Material": "Glow",
+"Operation": "Union"
+}
+],
+"Timeline": []
+}

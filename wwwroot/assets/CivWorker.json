@@ -1,0 +1,143 @@
+{
+"Name": "CivWorker",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "worker_torso",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.0, 0.3, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.2, 0.25, 0.15],
+"ColorHex": "#A1887F",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "worker_head",
+"ParentId": null,
+"Shape": "Sphere",
+"Position": [0.0, 0.5, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.14, 0.14, 0.14],
+"ColorHex": "#FFCC99",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "worker_leg_l",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.06, 0.1, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.07, 0.2, 0.07],
+"ColorHex": "#4E342E",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "worker_leg_r",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.06, 0.1, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.07, 0.2, 0.07],
+"ColorHex": "#4E342E",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "worker_arm_l",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [0.13, 0.35, 0.0],
+"Rotation": [0, 0, 15],
+"Scale": [0.05, 0.18, 0.05],
+"ColorHex": "#FFCC99",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "worker_arm_r",
+"ParentId": null,
+"Shape": "Capsule",
+"Position": [-0.13, 0.35, 0.05],
+"Rotation": [-40, 0, -15],
+"Scale": [0.05, 0.18, 0.05],
+"ColorHex": "#FFCC99",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hat_brim",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.56, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.25, 0.02, 0.25],
+"ColorHex": "#FFF176",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "hat_top",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [0.0, 0.6, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.12, 0.08, 0.12],
+"ColorHex": "#FFF176",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "shovel_shaft",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [-0.15, 0.25, 0.15],
+"Rotation": [-45, 0, 0],
+"Scale": [0.02, 0.5, 0.02],
+"ColorHex": "#795548",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "shovel_blade",
+"ParentId": null,
+"Shape": "Box",
+"Position": [-0.15, 0.05, 0.35],
+"Rotation": [-45, 0, 0],
+"Scale": [0.1, 0.12, 0.02],
+"ColorHex": "#BDBDBD",
+"Material": "Metal",
+"Operation": "Union"
+},
+{
+"Id": "satchel",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.08, 0.28, 0.1],
+"Rotation": [0, 15, 0],
+"Scale": [0.1, 0.12, 0.05],
+"ColorHex": "#5D4037",
+"Material": "Leather",
+"Operation": "Union"
+}
+],
+"Timeline": [
+{
+"Time": 0.0,
+"Action": "Rotate",
+"TargetId": "worker_arm_r",
+"Value": [-60, 0, -15],
+"Duration": 1.0
+},
+{
+"Time": 1.0,
+"Action": "Rotate",
+"TargetId": "worker_arm_r",
+"Value": [-40, 0, -15],
+"Duration": 1.0
+}
+]
+}

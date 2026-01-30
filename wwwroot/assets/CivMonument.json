@@ -1,0 +1,86 @@
+{
+    "Name": "CivMonument",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "base",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.1,
+                0.0
+            ],
+            "Scale": [
+                2.5,
+                0.2,
+                2.5
+            ],
+            "ColorHex": "#4B5563",
+            "Material": "Metal"
+        },
+        {
+            "Id": "pedestal",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.5,
+                0.0
+            ],
+            "Scale": [
+                1.2,
+                0.6,
+                1.2
+            ],
+            "ColorHex": "#374151",
+            "Material": "Metal"
+        },
+        {
+            "Id": "obelisk",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "Scale": [
+                0.6,
+                2.5,
+                0.6
+            ],
+            "ColorHex": "#9CA3AF",
+            "Material": "Metal"
+        },
+        {
+            "Id": "tip",
+            "Shape": "Cone",
+            "Position": [
+                0.0,
+                3.5,
+                0.0
+            ],
+            "Scale": [
+                0.6,
+                0.5,
+                0.6
+            ],
+            "ColorHex": "#FDE047",
+            "Material": "Metal"
+        },
+        {
+            "Id": "flame",
+            "Shape": "Sphere",
+            "Position": [
+                0.5,
+                1.15,
+                0.5
+            ],
+            "Scale": [
+                0.15,
+                0.2,
+                0.15
+            ],
+            "ColorHex": "#F97316",
+            "Material": "Glow"
+        }
+    ]
+}

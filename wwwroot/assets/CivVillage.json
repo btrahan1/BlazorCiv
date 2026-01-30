@@ -1,0 +1,259 @@
+{
+    "Name": "CivFirstVillage",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "ground_base",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                5.0,
+                0.05,
+                5.0
+            ],
+            "ColorHex": "#2D3A1F",
+            "Material": "Plastic",
+            "Operation": "Union"
+        },
+        {
+            "Id": "main_hut_body",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                1.2,
+                0.6,
+                0.8
+            ],
+            "Rotation": [
+                0.0,
+                15.0,
+                0.0
+            ],
+            "Scale": [
+                1.2,
+                1.2,
+                1.2
+            ],
+            "ColorHex": "#5C4033",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "main_hut_roof",
+            "ParentId": null,
+            "Shape": "Cone",
+            "Position": [
+                1.2,
+                1.7,
+                0.8
+            ],
+            "Rotation": [
+                0.0,
+                15.0,
+                0.0
+            ],
+            "Scale": [
+                1.6,
+                1.0,
+                1.6
+            ],
+            "ColorHex": "#EAB308",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "small_hut_body",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                -1.0,
+                0.45,
+                -0.5
+            ],
+            "Rotation": [
+                0.0,
+                -20.0,
+                0.0
+            ],
+            "Scale": [
+                0.9,
+                0.9,
+                0.9
+            ],
+            "ColorHex": "#5C4033",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "small_hut_roof",
+            "ParentId": null,
+            "Shape": "Cone",
+            "Position": [
+                -1.0,
+                1.3,
+                -0.5
+            ],
+            "Rotation": [
+                0.0,
+                -20.0,
+                0.0
+            ],
+            "Scale": [
+                1.2,
+                0.8,
+                1.2
+            ],
+            "ColorHex": "#EAB308",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "village_well_base",
+            "ParentId": null,
+            "Shape": "Cylinder",
+            "Position": [
+                -0.5,
+                0.25,
+                1.5
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "ColorHex": "#71717A",
+            "Material": "Metal",
+            "Operation": "Union"
+        },
+        {
+            "Id": "village_well_rim",
+            "ParentId": null,
+            "Shape": "Torus",
+            "Position": [
+                -0.5,
+                0.5,
+                1.5
+            ],
+            "Rotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.5,
+                0.5,
+                0.1
+            ],
+            "ColorHex": "#52525B",
+            "Material": "Metal",
+            "Operation": "Union"
+        },
+        {
+            "Id": "campfire_logs",
+            "ParentId": null,
+            "Shape": "Cylinder",
+            "Position": [
+                0.0,
+                0.1,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                45.0,
+                90.0
+            ],
+            "Scale": [
+                0.05,
+                0.4,
+                0.05
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "campfire_flame",
+            "ParentId": null,
+            "Shape": "Sphere",
+            "Position": [
+                0.0,
+                0.25,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.2,
+                0.3,
+                0.2
+            ],
+            "ColorHex": "#F97316",
+            "Material": "Glow",
+            "Operation": "Union"
+        },
+        {
+            "Id": "village_banner_pole",
+            "ParentId": null,
+            "Shape": "Cylinder",
+            "Position": [
+                2.0,
+                1.0,
+                -1.5
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.06,
+                2.0,
+                0.06
+            ],
+            "ColorHex": "#3F2E3E",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "village_banner_flag",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                2.25,
+                1.7,
+                -1.5
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.5,
+                0.4,
+                0.05
+            ],
+            "ColorHex": "#3B82F6",
+            "Material": "Leather",
+            "Operation": "Union"
+        }
+    ]
+}

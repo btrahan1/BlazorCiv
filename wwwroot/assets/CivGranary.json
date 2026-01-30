@@ -1,0 +1,70 @@
+{
+    "Name": "CivGranary",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "stone_foundation",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.1,
+                0.0
+            ],
+            "Scale": [
+                2.2,
+                0.2,
+                2.2
+            ],
+            "ColorHex": "#71717A",
+            "Material": "Metal"
+        },
+        {
+            "Id": "main_silo",
+            "Shape": "Cylinder",
+            "Position": [
+                0.0,
+                1.2,
+                0.0
+            ],
+            "Scale": [
+                1.8,
+                1.4,
+                1.8
+            ],
+            "ColorHex": "#92400E",
+            "Material": "Leather"
+        },
+        {
+            "Id": "conical_roof",
+            "Shape": "Cone",
+            "Position": [
+                0.0,
+                2.3,
+                0.0
+            ],
+            "Scale": [
+                2.1,
+                0.8,
+                2.1
+            ],
+            "ColorHex": "#FDE047",
+            "Material": "Leather"
+        },
+        {
+            "Id": "loading_door",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                1.0,
+                0.85
+            ],
+            "Scale": [
+                0.5,
+                0.7,
+                0.1
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather"
+        }
+    ]
+}

@@ -1,0 +1,259 @@
+{
+    "Name": "CivWarrior",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "torso",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.4,
+                0.5,
+                0.25
+            ],
+            "ColorHex": "#3B82F6",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "head",
+            "ParentId": null,
+            "Shape": "Sphere",
+            "Position": [
+                0.0,
+                1.4,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.22,
+                0.22,
+                0.22
+            ],
+            "ColorHex": "#FFDBAC",
+            "Material": "Plastic",
+            "Operation": "Union"
+        },
+        {
+            "Id": "helmet",
+            "ParentId": null,
+            "Shape": "Cone",
+            "Position": [
+                0.0,
+                1.55,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.25,
+                0.2,
+                0.25
+            ],
+            "ColorHex": "#71717A",
+            "Material": "Metal",
+            "Operation": "Union"
+        },
+        {
+            "Id": "leg_right",
+            "ParentId": null,
+            "Shape": "Capsule",
+            "Position": [
+                -0.12,
+                0.4,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.15,
+                0.8,
+                0.15
+            ],
+            "ColorHex": "#452719",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "leg_left",
+            "ParentId": null,
+            "Shape": "Capsule",
+            "Position": [
+                0.12,
+                0.4,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.15,
+                0.8,
+                0.15
+            ],
+            "ColorHex": "#452719",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "arm_right",
+            "ParentId": null,
+            "Shape": "Capsule",
+            "Position": [
+                -0.28,
+                1.1,
+                0.1
+            ],
+            "Rotation": [
+                -45.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.12,
+                0.5,
+                0.12
+            ],
+            "ColorHex": "#FFDBAC",
+            "Material": "Plastic",
+            "Operation": "Union"
+        },
+        {
+            "Id": "arm_left",
+            "ParentId": null,
+            "Shape": "Capsule",
+            "Position": [
+                0.28,
+                1.1,
+                0.1
+            ],
+            "Rotation": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.12,
+                0.5,
+                0.12
+            ],
+            "ColorHex": "#FFDBAC",
+            "Material": "Plastic",
+            "Operation": "Union"
+        },
+        {
+            "Id": "sword_hilt",
+            "ParentId": null,
+            "Shape": "Cylinder",
+            "Position": [
+                -0.35,
+                0.85,
+                0.35
+            ],
+            "Rotation": [
+                90.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.03,
+                0.15,
+                0.03
+            ],
+            "ColorHex": "#452719",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "sword_blade",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                -0.35,
+                1.1,
+                0.35
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                0.07,
+                0.6,
+                0.015
+            ],
+            "ColorHex": "#D4D4D8",
+            "Material": "Metal",
+            "Operation": "Union"
+        },
+        {
+            "Id": "shield_main",
+            "ParentId": null,
+            "Shape": "Box",
+            "Position": [
+                0.45,
+                1.0,
+                0.25
+            ],
+            "Rotation": [
+                0.0,
+                20.0,
+                0.0
+            ],
+            "Scale": [
+                0.45,
+                0.6,
+                0.06
+            ],
+            "ColorHex": "#5C4033",
+            "Material": "Leather",
+            "Operation": "Union"
+        },
+        {
+            "Id": "shield_boss",
+            "ParentId": null,
+            "Shape": "Sphere",
+            "Position": [
+                0.48,
+                1.0,
+                0.28
+            ],
+            "Rotation": [
+                0.0,
+                20.0,
+                0.0
+            ],
+            "Scale": [
+                0.15,
+                0.15,
+                0.05
+            ],
+            "ColorHex": "#A1A1AA",
+            "Material": "Metal",
+            "Operation": "Union"
+        }
+    ]
+}

@@ -13,10 +13,14 @@ window.CivEngine = {
     raycaster: new THREE.Raycaster(),
     mouse: new THREE.Vector2(),
     highlightMesh: null,
+    assets: {},
 
-    init: function (containerId, dotNetRef) {
-        console.log("Initializing CivEngine (High Brightness)...");
+    init: async function (containerId, dotNetRef) {
+        console.log("Initializing CivEngine...");
         this.dotNetRef = dotNetRef;
+
+        await this.loadAssets();
+
         const container = document.getElementById(containerId);
         if (!container) return;
 
@@ -54,20 +58,32 @@ window.CivEngine = {
             this.mouse.y = -((e.clientY - rect.top) / this.height) * 2 + 1;
         });
 
-        // CLICK LISTENER
+        // CLICK LISTENER (Left Click)
         container.addEventListener('click', (e) => {
-            // Re-check raycast for click
             this.raycaster.setFromCamera(this.mouse, this.camera);
             const intersects = this.raycaster.intersectObject(this.hexMesh);
 
             if (intersects.length > 0) {
                 const instanceId = intersects[0].instanceId;
                 const data = this.hexMesh.userData[instanceId];
-                console.log("Clicked Hex: " + data.q + ", " + data.r);
-
-                // Call C# 
                 if (this.dotNetRef) {
                     this.dotNetRef.invokeMethodAsync('OnHexClicked', data.q, data.r);
+                }
+            }
+        });
+
+        // RIGHT CLICK LISTENER
+        container.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent browser menu
+
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            const intersects = this.raycaster.intersectObject(this.hexMesh);
+
+            if (intersects.length > 0) {
+                const instanceId = intersects[0].instanceId;
+                const data = this.hexMesh.userData[instanceId];
+                if (this.dotNetRef) {
+                    this.dotNetRef.invokeMethodAsync('OnHexRightClicked', data.q, data.r);
                 }
             }
         });
@@ -97,24 +113,30 @@ window.CivEngine = {
         });
     },
 
-    // ASSET DATA
-    VILLAGE_JSON: {
-        "Name": "CivFirstVillage",
-        "Type": "Procedural",
-        "Parts": [
-            { "Id": "ground_base", "ParentId": null, "Shape": "Box", "Position": [0.0, 0.0, 0.0], "Rotation": [0.0, 0.0, 0.0], "Scale": [5.0, 0.05, 5.0], "ColorHex": "#2D3A1F", "Material": "Plastic", "Operation": "Union" },
-            { "Id": "main_hut_body", "ParentId": null, "Shape": "Box", "Position": [1.2, 0.6, 0.8], "Rotation": [0.0, 15.0, 0.0], "Scale": [1.2, 1.2, 1.2], "ColorHex": "#5C4033", "Material": "Leather", "Operation": "Union" },
-            { "Id": "main_hut_roof", "ParentId": null, "Shape": "Cone", "Position": [1.2, 1.7, 0.8], "Rotation": [0.0, 15.0, 0.0], "Scale": [1.6, 1.0, 1.6], "ColorHex": "#EAB308", "Material": "Leather", "Operation": "Union" },
-            { "Id": "small_hut_body", "ParentId": null, "Shape": "Box", "Position": [-1.0, 0.45, -0.5], "Rotation": [0.0, -20.0, 0.0], "Scale": [0.9, 0.9, 0.9], "ColorHex": "#5C4033", "Material": "Leather", "Operation": "Union" },
-            { "Id": "small_hut_roof", "ParentId": null, "Shape": "Cone", "Position": [-1.0, 1.3, -0.5], "Rotation": [0.0, -20.0, 0.0], "Scale": [1.2, 0.8, 1.2], "ColorHex": "#EAB308", "Material": "Leather", "Operation": "Union" },
-            { "Id": "village_well_base", "ParentId": null, "Shape": "Cylinder", "Position": [-0.5, 0.25, 1.5], "Rotation": [0.0, 0.0, 0.0], "Scale": [0.5, 0.5, 0.5], "ColorHex": "#71717A", "Material": "Metal", "Operation": "Union" },
-            { "Id": "village_well_rim", "ParentId": null, "Shape": "Torus", "Position": [-0.5, 0.5, 1.5], "Rotation": [90.0, 0.0, 0.0], "Scale": [0.5, 0.5, 0.1], "ColorHex": "#52525B", "Material": "Metal", "Operation": "Union" },
-            { "Id": "campfire_logs", "ParentId": null, "Shape": "Cylinder", "Position": [0.0, 0.1, 0.0], "Rotation": [0.0, 45.0, 90.0], "Scale": [0.05, 0.4, 0.05], "ColorHex": "#451A03", "Material": "Leather", "Operation": "Union" },
-            { "Id": "campfire_flame", "ParentId": null, "Shape": "Sphere", "Position": [0.0, 0.25, 0.0], "Rotation": [0.0, 0.0, 0.0], "Scale": [0.2, 0.3, 0.2], "ColorHex": "#F97316", "Material": "Glow", "Operation": "Union" },
-            { "Id": "village_banner_pole", "ParentId": null, "Shape": "Cylinder", "Position": [2.0, 1.0, -1.5], "Rotation": [0.0, 0.0, 0.0], "Scale": [0.06, 2.0, 0.06], "ColorHex": "#3F2E3E", "Material": "Leather", "Operation": "Union" },
-            { "Id": "village_banner_flag", "ParentId": null, "Shape": "Box", "Position": [2.25, 1.7, -1.5], "Rotation": [0.0, 0.0, 0.0], "Scale": [0.5, 0.4, 0.05], "ColorHex": "#3B82F6", "Material": "Leather", "Operation": "Union" }
-        ]
+    loadAssets: async function () {
+        const files = [
+            "CivVillage", "CivSettler", "CivWarrior", "CivArcher", "CivBarbarian",
+            "CivGranary", "CivBarracks", "CivMonument", "CivWheat", "CivIron", "CivBarbCamp",
+            "CivHorseChariot", "CivSwordsman",
+            "CivGrass", "CivHill", "CivMountain", "CivSnow", "CivCoast",
+            "CivWorker"
+        ];
+
+        console.log("Loading " + files.length + " assets...");
+
+        for (const file of files) {
+            try {
+                const res = await fetch(`assets/${file}.json`);
+                const json = await res.json();
+                this.assets[file] = json;
+            } catch (e) {
+                console.error(`Failed to load asset: ${file}`, e);
+            }
+        }
+        console.log("Assets loaded:", Object.keys(this.assets));
     },
+
+    // ASSET RENDERER
 
     // ASSET RENDERER
     buildAsset: function (json, scale = 1.0) {
@@ -181,11 +203,14 @@ window.CivEngine = {
 
     hexMesh: null,
     campMeshes: [],
+    resourceMeshes: [],
 
     renderMap: function (mapData) {
         if (this.hexMesh) this.scene.remove(this.hexMesh);
         this.campMeshes.forEach(m => this.scene.remove(m));
         this.campMeshes = [];
+        this.resourceMeshes.forEach(m => this.scene.remove(m));
+        this.resourceMeshes = [];
 
         console.log("Rendering Map from C# Data: " + mapData.length + " tiles.");
 
@@ -198,26 +223,128 @@ window.CivEngine = {
         const dummy = new THREE.Object3D();
         const color = new THREE.Color();
 
+        // 1. Index Map for Neighbor Lookup
+        // Key: "q,r", Value: Tile
+        const tileMap = {};
+        for (let i = 0; i < mapData.length; i++) {
+            const t = mapData[i];
+            tileMap[t.q + "," + t.r] = t;
+        }
+
+        // 2. Render Loop
+
         for (let i = 0; i < mapData.length; i++) {
             const tile = mapData[i];
             const pos = this.hexToPixel(tile.q, tile.r);
 
             // Visuals
-            let h = 1;
-            let c = 0x4caf50; // Grass default
+            let terrainJson = null;
+            let h = 0.5; // Base height
+            let c = 0x4caf50; // Default color (Grass)
 
-            if (tile.type === "Ocean") { c = 0x2196f3; h = 0.5; }
-            if (tile.type === "Coast") { c = 0x4fc3f7; h = 0.5; }
-            if (tile.type === "Hill") { c = 0x8bc34a; h = 2; }
-            if (tile.type === "Mountain") { c = 0x8d6e63; h = 6; }
-            if (tile.type === "Snow") { c = 0xffffff; h = 3; }
+            if (tile.type === "Ocean") { terrainJson = this.assets["CivCoast"]; h = 0.5; c = 0x2196f3; }
+            else if (tile.type === "Coast") { terrainJson = this.assets["CivCoast"]; h = 0.5; c = 0x4fc3f7; }
+            else if (tile.type === "Hill") { terrainJson = this.assets["CivHill"]; h = 1.0; c = 0x8bc34a; }
+            else if (tile.type === "Mountain") { terrainJson = this.assets["CivMountain"]; h = 2.0; c = 0x8d6e63; }
+            else if (tile.type === "Snow") { terrainJson = this.assets["CivSnow"]; h = 1.0; c = 0xffffff; }
+            else { terrainJson = this.assets["CivGrass"]; h = 0.5; c = 0x4caf50; }
+
+            // Render Terrain Mesh
+            if (terrainJson) {
+                // Scaling factor to fill the hex
+                // User validated 9.5 as the preferred scale for full coverage.
+                const terrainScale = 9.5;
+
+                const terrain = this.buildAsset(terrainJson, terrainScale);
+                terrain.position.set(pos.x, 0, pos.z);
+                terrain.rotation.y = Math.PI / 6;
+                this.scene.add(terrain);
+                // We aren't tracking terrain meshes for removal yet because we assume map is static or fully redrawn
+                // But for now, let's just add to scene. Ideally we'd have a this.terrainMeshes array.
+                this.hexMesh.visible = false; // Hide the base hex mesh since we are using models
+            } else {
+                // Fallback to Colored Hexes if no asset (shouldn't happen)
+                dummy.position.set(pos.x, h / 2, pos.z);
+                dummy.scale.set(1.0, h, 1.0); // Full size, no gaps
+                dummy.rotation.set(0, Math.PI / 6, 0);
+                dummy.updateMatrix();
+                this.hexMesh.setMatrixAt(i, dummy.matrix);
+                this.hexMesh.setColorAt(i, color.setHex(c));
+            }
+
+            // Re-calc height for props on top
+            // Note: Our assets might have height built-in. 
+            // We need to know "top" of asset.
+            let propH = h;
+            if (tile.type === "Hill") propH = 1.5;
+            if (tile.type === "Mountain") propH = 3.0;
 
             // Barbarian Camp
             if (tile.hasCamp) {
-                const camp = this.buildAsset(this.BARBARIAN_CAMP_JSON, 1.0);
+                const camp = this.buildAsset(this.assets["CivBarbCamp"], 1.0);
                 camp.position.set(pos.x, h, pos.z); // Sit on top of tile
                 this.scene.add(camp);
                 this.campMeshes.push(camp);
+            }
+
+            // Resources
+            if (tile.resource === "Wheat") {
+                const res = this.buildAsset(this.assets["CivWheat"], 0.8);
+                res.position.set(pos.x, h, pos.z);
+                this.scene.add(res);
+                this.resourceMeshes.push(res);
+            }
+            if (tile.resource === "Iron") {
+                const res = this.buildAsset(this.assets["CivIron"], 0.8);
+                res.position.set(pos.x, h, pos.z);
+                this.scene.add(res);
+                this.resourceMeshes.push(res);
+            }
+
+            // Road Logic (Connected)
+            if (tile.hasRoad) {
+                // 1. Center Hub
+                const roadMat = new THREE.MeshPhongMaterial({ color: 0x808080 });
+                const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.1, 8), roadMat);
+                hub.position.set(pos.x, h, pos.z);
+                this.scene.add(hub);
+                this.resourceMeshes.push(hub);
+
+                // 2. Spokes to Neighbors
+                const neighbors = [
+                    { q: 1, r: 0 }, { q: 1, r: -1 }, { q: 0, r: -1 },
+                    { q: -1, r: 0 }, { q: -1, r: 1 }, { q: 0, r: 1 }
+                ];
+
+                neighbors.forEach(n => {
+                    const nQ = tile.q + n.q;
+                    const nR = tile.r + n.r;
+                    const neighbor = tileMap[nQ + "," + nR];
+
+                    // Connect if neighbor has road OR is a City (Roads connect to cities)
+                    if (neighbor && neighbor.hasRoad) {
+                        const nPos = this.hexToPixel(nQ, nR);
+                        const dx = nPos.x - pos.x;
+                        const dz = nPos.z - pos.z;
+
+                        const dist = Math.sqrt(dx * dx + dz * dz);
+                        const angle = Math.atan2(dz, dx);
+
+                        // Length = Half Distance + 20% Overlap
+                        // This ensures segments meet in the middle regardless of hexRadius or scaling
+                        const spokeLen = (dist / 2) * 1.2;
+
+                        // Geometry: Thin box length = spokeLen
+                        const poke = new THREE.Mesh(new THREE.BoxGeometry(spokeLen, 0.1, 0.6), roadMat); // Wider road
+
+                        poke.position.set(pos.x, h, pos.z);
+                        poke.rotation.y = -angle;
+                        poke.translateX(spokeLen / 2);
+
+                        this.scene.add(poke);
+                        this.resourceMeshes.push(poke);
+                    }
+                });
             }
 
             // Height scaling
@@ -258,6 +385,24 @@ window.CivEngine = {
         ]
     },
 
+    ARCHER_JSON: {
+        "Name": "CivArcher", "Type": "Procedural",
+        "Parts": [
+            { "Id": "torso", "Shape": "Box", "Position": [0.0, 1.0, 0.0], "Scale": [0.4, 0.5, 0.25], "ColorHex": "#166534", "Material": "Leather" },
+            { "Id": "head", "Shape": "Sphere", "Position": [0.0, 1.4, 0.0], "Scale": [0.22, 0.22, 0.22], "ColorHex": "#FFDBAC", "Material": "Plastic" },
+            { "Id": "hood", "Shape": "Cone", "Position": [0.0, 1.52, 0.0], "Rotation": [10.0, 0.0, 0.0], "Scale": [0.25, 0.2, 0.25], "ColorHex": "#14532D", "Material": "Leather" },
+            { "Id": "leg_right", "Shape": "Capsule", "Position": [-0.12, 0.4, 0.0], "Scale": [0.15, 0.8, 0.15], "ColorHex": "#3F2E3E", "Material": "Leather" },
+            { "Id": "leg_left", "Shape": "Capsule", "Position": [0.12, 0.4, 0.0], "Scale": [0.15, 0.8, 0.15], "ColorHex": "#3F2E3E", "Material": "Leather" },
+            { "Id": "arm_holding_bow", "Shape": "Capsule", "Position": [-0.35, 1.2, 0.2], "Rotation": [-80.0, 0.0, 0.0], "Scale": [0.1, 0.5, 0.1], "ColorHex": "#FFDBAC", "Material": "Plastic" },
+            { "Id": "arm_drawing_string", "Shape": "Capsule", "Position": [0.25, 1.2, 0.05], "Rotation": [-30.0, 45.0, 0.0], "Scale": [0.1, 0.45, 0.1], "ColorHex": "#FFDBAC", "Material": "Plastic" },
+            { "Id": "bow_upper", "Shape": "Cylinder", "Position": [-0.4, 1.45, 0.4], "Rotation": [25.0, 0.0, 0.0], "Scale": [0.03, 0.6, 0.03], "ColorHex": "#78350F", "Material": "Leather" },
+            { "Id": "bow_lower", "Shape": "Cylinder", "Position": [-0.4, 0.85, 0.4], "Rotation": [-25.0, 0.0, 0.0], "Scale": [0.03, 0.6, 0.03], "ColorHex": "#78350F", "Material": "Leather" },
+            { "Id": "bow_string", "Shape": "Cylinder", "Position": [-0.2, 1.15, 0.2], "Scale": [0.005, 1.1, 0.005], "ColorHex": "#F3F4F6", "Material": "Plastic" },
+            { "Id": "quiver", "Shape": "Cylinder", "Position": [0.15, 1.0, -0.18], "Rotation": [20.0, 0.0, 15.0], "Scale": [0.12, 0.5, 0.12], "ColorHex": "#451A03", "Material": "Leather" },
+            { "Id": "fletching", "Shape": "Box", "Position": [0.2, 1.3, -0.22], "Rotation": [20.0, 0.0, 15.0], "Scale": [0.08, 0.15, 0.08], "ColorHex": "#F9FAFB", "Material": "Plastic" }
+        ]
+    },
+
     WARRIOR_JSON: {
         "Name": "CivWarrior", "Type": "Procedural",
         "Parts": [
@@ -275,19 +420,7 @@ window.CivEngine = {
         ]
     },
 
-    // BARBARIAN ASSET
-    BARBARIAN_JSON: {
-        "Name": "CivBarbarian", "Type": "Procedural",
-        "Parts": [
-            { "Id": "barb_torso", "Shape": "Box", "Position": [0.0, 1.0, 0.0], "Rotation": [5.0, 0.0, 0.0], "Scale": [0.45, 0.55, 0.3], "ColorHex": "#451A03", "Material": "Leather" },
-            { "Id": "barb_head", "Shape": "Sphere", "Position": [0.0, 1.45, 0.05], "Scale": [0.22, 0.22, 0.22], "ColorHex": "#D2B48C", "Material": "Plastic" },
-            { "Id": "barb_helmet", "Shape": "Sphere", "Position": [0.0, 1.55, 0.05], "Scale": [0.24, 0.12, 0.24], "ColorHex": "#3F3F46", "Material": "Metal" },
-            { "Id": "horn_l", "Shape": "Cone", "Position": [0.18, 1.62, 0.05], "Rotation": [0.0, 0.0, -35.0], "Scale": [0.06, 0.25, 0.06], "ColorHex": "#F5F5DC", "Material": "Plastic" },
-            { "Id": "horn_r", "Shape": "Cone", "Position": [-0.18, 1.62, 0.05], "Rotation": [0.0, 0.0, 35.0], "Scale": [0.06, 0.25, 0.06], "ColorHex": "#F5F5DC", "Material": "Plastic" },
-            { "Id": "axe_arm", "Shape": "Capsule", "Position": [-0.35, 1.2, 0.2], "Rotation": [-110.0, 0.0, 0.0], "Scale": [0.14, 0.5, 0.14], "ColorHex": "#D2B48C", "Material": "Plastic" },
-            { "Id": "axe_head", "Shape": "Box", "Position": [-0.35, 1.4, 0.85], "Scale": [0.35, 0.4, 0.06], "ColorHex": "#71717A", "Material": "Metal" }
-        ]
-    },
+
 
     unitMeshes: [],
 
@@ -300,9 +433,13 @@ window.CivEngine = {
 
         unitData.forEach(u => {
             let assetJson = null;
-            if (u.type === "Warrior") assetJson = this.WARRIOR_JSON;
-            else if (u.type === "Settler") assetJson = this.SETTLER_JSON;
-            else if (u.type === "Barbarian") assetJson = this.BARBARIAN_JSON;
+            if (u.type === "Warrior") assetJson = this.assets["CivWarrior"];
+            else if (u.type === "Settler") assetJson = this.assets["CivSettler"];
+            else if (u.type === "Archer") assetJson = this.assets["CivArcher"];
+            else if (u.type === "Barbarian") assetJson = this.assets["CivBarbarian"];
+            else if (u.type === "Chariot") assetJson = this.assets["CivHorseChariot"];
+            else if (u.type === "Swordsman") assetJson = this.assets["CivSwordsman"];
+            else if (u.type === "Worker") assetJson = this.assets["CivWorker"];
 
             // Build or Default
             const group = assetJson ? this.buildAsset(assetJson, 2.5) : new THREE.Group();
@@ -318,8 +455,13 @@ window.CivEngine = {
             const pos = this.hexToPixel(u.q, u.r);
             group.position.set(pos.x, u.height, pos.z);
 
-            // Random Rotation
-            group.rotation.y = Math.random() * Math.PI * 2;
+            // Deterministic Rotation (Pseudo-Random based on Unit attributes)
+            // This prevents "twitching" when re-rendering
+            const seed = (u.q * 100 + u.r) + u.type.length;
+            const pseudoRandom = Math.sin(seed) * 10000;
+            const rotation = (pseudoRandom - Math.floor(pseudoRandom)) * Math.PI * 2;
+
+            group.rotation.y = rotation;
 
             this.scene.add(group);
             this.unitMeshes.push(group);
@@ -327,37 +469,6 @@ window.CivEngine = {
     },
 
     // BUILDING ASSETS
-    GRANARY_JSON: {
-        "Name": "CivGranary", "Type": "Procedural",
-        "Parts": [
-            { "Id": "stone_foundation", "Shape": "Box", "Position": [0.0, 0.1, 0.0], "Scale": [2.2, 0.2, 2.2], "ColorHex": "#71717A", "Material": "Metal" },
-            { "Id": "main_silo", "Shape": "Cylinder", "Position": [0.0, 1.2, 0.0], "Scale": [1.8, 1.4, 1.8], "ColorHex": "#92400E", "Material": "Leather" },
-            { "Id": "conical_roof", "Shape": "Cone", "Position": [0.0, 2.3, 0.0], "Scale": [2.1, 0.8, 2.1], "ColorHex": "#FDE047", "Material": "Leather" },
-            { "Id": "loading_door", "Shape": "Box", "Position": [0.0, 1.0, 0.85], "Scale": [0.5, 0.7, 0.1], "ColorHex": "#451A03", "Material": "Leather" }
-        ]
-    },
-    BARRACKS_JSON: {
-        "Name": "CivBarracks", "Type": "Procedural",
-        "Parts": [
-            { "Id": "foundation", "Shape": "Box", "Position": [0.0, 0.025, 0.0], "Scale": [4.5, 0.05, 4.5], "ColorHex": "#3F2E3E", "Material": "Plastic" },
-            { "Id": "main_quarters", "Shape": "Box", "Position": [0.5, 0.6, 0.0], "Scale": [2.5, 1.2, 1.8], "ColorHex": "#78350F", "Material": "Leather" },
-            { "Id": "roof_l", "Shape": "Box", "Position": [0.5, 1.5, 0.5], "Rotation": [35.0, 0.0, 0.0], "Scale": [2.6, 0.1, 1.2], "ColorHex": "#451A03", "Material": "Leather" },
-            { "Id": "roof_r", "Shape": "Box", "Position": [0.5, 1.5, -0.5], "Rotation": [-35.0, 0.0, 0.0], "Scale": [2.6, 0.1, 1.2], "ColorHex": "#451A03", "Material": "Leather" },
-            { "Id": "dummy", "Shape": "Capsule", "Position": [-1.2, 0.8, 1.0], "Scale": [0.3, 0.6, 0.3], "ColorHex": "#D6D3D1", "Material": "Leather" },
-            { "Id": "banner", "Shape": "Box", "Position": [1.8, 2.0, 1.5], "Scale": [0.02, 0.8, 0.6], "ColorHex": "#DC2626", "Material": "Leather" }
-        ]
-    },
-    MONUMENT_JSON: {
-        "Name": "CivMonument", "Type": "Procedural",
-        "Parts": [
-            { "Id": "base", "Shape": "Box", "Position": [0.0, 0.1, 0.0], "Scale": [2.5, 0.2, 2.5], "ColorHex": "#4B5563", "Material": "Metal" },
-            { "Id": "pedestal", "Shape": "Box", "Position": [0.0, 0.5, 0.0], "Scale": [1.2, 0.6, 1.2], "ColorHex": "#374151", "Material": "Metal" },
-            { "Id": "obelisk", "Shape": "Box", "Position": [0.0, 2.0, 0.0], "Scale": [0.6, 2.5, 0.6], "ColorHex": "#9CA3AF", "Material": "Metal" },
-            { "Id": "tip", "Shape": "Cone", "Position": [0.0, 3.5, 0.0], "Scale": [0.6, 0.5, 0.6], "ColorHex": "#FDE047", "Material": "Metal" },
-            { "Id": "flame", "Shape": "Sphere", "Position": [0.5, 1.15, 0.5], "Scale": [0.15, 0.2, 0.15], "ColorHex": "#F97316", "Material": "Glow" }
-        ]
-    },
-
     cityMeshes: [],
 
     renderCities: function (cityData) {
@@ -371,7 +482,7 @@ window.CivEngine = {
             const cityGroup = new THREE.Group();
 
             // 1. Main Village (Always Center)
-            const village = this.buildAsset(this.VILLAGE_JSON);
+            const village = this.buildAsset(this.assets["CivVillage"]);
             village.scale.set(1.0, 1.0, 1.0);
             cityGroup.add(village);
 
@@ -379,7 +490,7 @@ window.CivEngine = {
 
             // Granary (Back Left)
             if (c.hasGranary) {
-                const granary = this.buildAsset(this.GRANARY_JSON, 0.4); // Smaller scale
+                const granary = this.buildAsset(this.assets["CivGranary"], 0.4); // Smaller scale
                 granary.position.set(-1.5, 0, -1.5);
                 granary.rotation.y = Math.PI / 4;
                 cityGroup.add(granary);
@@ -387,7 +498,7 @@ window.CivEngine = {
 
             // Barracks (Back Right)
             if (c.hasBarracks) {
-                const barracks = this.buildAsset(this.BARRACKS_JSON, 0.4);
+                const barracks = this.buildAsset(this.assets["CivBarracks"], 0.4);
                 barracks.position.set(1.5, 0, -1.5);
                 barracks.rotation.y = -Math.PI / 4;
                 cityGroup.add(barracks);
@@ -395,7 +506,7 @@ window.CivEngine = {
 
             // Monument (Front)
             if (c.hasMonument) {
-                const monument = this.buildAsset(this.MONUMENT_JSON, 0.5);
+                const monument = this.buildAsset(this.assets["CivMonument"], 0.5);
                 monument.position.set(0, 0, 1.8);
                 cityGroup.add(monument);
             }

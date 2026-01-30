@@ -1,0 +1,118 @@
+{
+    "Name": "BarbCamp",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "spike_1",
+            "Shape": "Cone",
+            "Position": [
+                1.2,
+                0.5,
+                0.0
+            ],
+            "Scale": [
+                0.2,
+                1.0,
+                0.2
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather"
+        },
+        {
+            "Id": "spike_2",
+            "Shape": "Cone",
+            "Position": [
+                -1.2,
+                0.5,
+                0.0
+            ],
+            "Scale": [
+                0.2,
+                1.0,
+                0.2
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather"
+        },
+        {
+            "Id": "spike_3",
+            "Shape": "Cone",
+            "Position": [
+                0.0,
+                0.5,
+                1.2
+            ],
+            "Scale": [
+                0.2,
+                1.0,
+                0.2
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather"
+        },
+        {
+            "Id": "spike_4",
+            "Shape": "Cone",
+            "Position": [
+                0.0,
+                0.5,
+                -1.2
+            ],
+            "Scale": [
+                0.2,
+                1.0,
+                0.2
+            ],
+            "ColorHex": "#451A03",
+            "Material": "Leather"
+        },
+        {
+            "Id": "skull_pole",
+            "Shape": "Cylinder",
+            "Position": [
+                0.0,
+                0.8,
+                0.0
+            ],
+            "Scale": [
+                0.1,
+                1.5,
+                0.1
+            ],
+            "ColorHex": "#A8A29E",
+            "Material": "Leather"
+        },
+        {
+            "Id": "skull",
+            "Shape": "Sphere",
+            "Position": [
+                0.0,
+                1.6,
+                0.0
+            ],
+            "Scale": [
+                0.3,
+                0.3,
+                0.3
+            ],
+            "ColorHex": "#F5F5F5",
+            "Material": "Plastic"
+        },
+        {
+            "Id": "fire",
+            "Shape": "Sphere",
+            "Position": [
+                0.0,
+                0.2,
+                0.0
+            ],
+            "Scale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "ColorHex": "#EF4444",
+            "Material": "Glow"
+        }
+    ]
+}

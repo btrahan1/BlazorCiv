@@ -1,0 +1,85 @@
+{
+    "Name": "CivIron",
+    "Type": "Procedural",
+    "Parts": [
+        {
+            "Id": "rock_base",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.25,
+                0.0
+            ],
+            "Scale": [
+                1.5,
+                0.5,
+                1.5
+            ],
+            "ColorHex": "#4B5563",
+            "Material": "Metal"
+        },
+        {
+            "Id": "ore_1",
+            "Shape": "Box",
+            "Position": [
+                0.2,
+                0.6,
+                0.0
+            ],
+            "Rotation": [
+                30,
+                45,
+                0
+            ],
+            "Scale": [
+                0.8,
+                0.8,
+                0.8
+            ],
+            "ColorHex": "#94A3B8",
+            "Material": "Metal"
+        },
+        {
+            "Id": "ore_2",
+            "Shape": "Box",
+            "Position": [
+                -0.5,
+                0.4,
+                0.4
+            ],
+            "Rotation": [
+                10,
+                0,
+                20
+            ],
+            "Scale": [
+                0.6,
+                0.6,
+                0.6
+            ],
+            "ColorHex": "#64748B",
+            "Material": "Metal"
+        },
+        {
+            "Id": "ore_rust",
+            "Shape": "Box",
+            "Position": [
+                0.0,
+                0.7,
+                -0.2
+            ],
+            "Rotation": [
+                0,
+                60,
+                0
+            ],
+            "Scale": [
+                0.4,
+                0.4,
+                0.4
+            ],
+            "ColorHex": "#B91C1C",
+            "Material": "Metal"
+        }
+    ]
+}

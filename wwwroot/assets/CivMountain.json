@@ -1,0 +1,84 @@
+{
+"Name": "CivMountain",
+"Type": "Procedural",
+"Parts": [
+{
+"Id": "mountain_base_hex",
+"ParentId": null,
+"Shape": "Cylinder",
+"Position": [0.0, 0.0, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [1.0, 0.05, 1.0],
+"ColorHex": "#757575",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "peak_primary_stone",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [0.0, 0.4, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.7, 0.8, 0.7],
+"ColorHex": "#757575",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "peak_secondary_stone",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [0.15, 0.25, -0.15],
+"Rotation": [5, 45, -5],
+"Scale": [0.4, 0.5, 0.4],
+"ColorHex": "#757575",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "peak_tertiary_stone",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [-0.2, 0.2, 0.1],
+"Rotation": [-3, 120, 2],
+"Scale": [0.35, 0.4, 0.35],
+"ColorHex": "#757575",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_cap_main",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [0.0, 0.65, 0.0],
+"Rotation": [0, 0, 0],
+"Scale": [0.25, 0.3, 0.25],
+"ColorHex": "#FFFFFF",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "snow_cap_side",
+"ParentId": null,
+"Shape": "Cone",
+"Position": [0.15, 0.4, -0.15],
+"Rotation": [5, 45, -5],
+"Scale": [0.15, 0.2, 0.15],
+"ColorHex": "#FFFFFF",
+"Material": "Plastic",
+"Operation": "Union"
+},
+{
+"Id": "rock_detail_1",
+"ParentId": null,
+"Shape": "Box",
+"Position": [0.3, 0.05, 0.1],
+"Rotation": [15, 20, 10],
+"Scale": [0.1, 0.1, 0.1],
+"ColorHex": "#616161",
+"Material": "Plastic",
+"Operation": "Union"
+}
+],
+"Timeline": []
+}
