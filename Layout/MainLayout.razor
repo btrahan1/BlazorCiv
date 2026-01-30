@@ -1,0 +1,212 @@
+﻿@inherits LayoutComponentBase
+@inject Microsoft.JSInterop.IJSRuntime JS
+@inject BlazorCiv.Services.WorldState World
+
+<div id="civ-container" style="width: 100vw; height: 100vh; background: #111; position: absolute; top:0; left:0; overflow:hidden;"></div>
+
+<!-- UI Overlay -->
+<div class="ui-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+    @Body
+    
+    <!-- Top Right: Unit Info -->
+    @if (World.SelectedUnit != null)
+    {
+        <div style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
+            <h5>@World.SelectedUnit.Type</h5>
+            <div class="mb-1">
+                 ❤️ <b>@World.SelectedUnit.Health</b> / @World.SelectedUnit.MaxHealth 
+                 <span class="ms-2">⚔️ @World.SelectedUnit.AttackPower</span>
+            </div>
+            <div class="progress mb-2" style="height: 6px;">
+                <div class="progress-bar bg-danger" style="width: @(World.SelectedUnit.Health * 100 / Math.Max(1, World.SelectedUnit.MaxHealth))%"></div>
+            </div>
+            <div class="mb-2">👟 Moves: @World.SelectedUnit.MovementPoints / 2</div>
+            <div class="small text-muted">Pos: @World.SelectedUnit.Q, @World.SelectedUnit.R</div>
+            
+            @if (World.SelectedUnit.Type == BlazorCiv.Services.UnitType.Settler)
+            {
+                 <button class="btn btn-success w-100 mt-2" @onclick="FoundCity">Build City</button>
+            }
+
+            @if (World.LatestEnemy != null)
+            {
+                <hr style="border-color:white;"/>
+                <div class="text-danger small fw-bold">VS @World.LatestEnemy.Type</div>
+                <div class="mb-1">
+                     💔 <b>@World.LatestEnemy.Health</b> / @World.LatestEnemy.MaxHealth
+                     <span class="ms-2">⚔️ @World.LatestEnemy.AttackPower</span>
+                </div>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-warning" style="width: @(Math.Max(0, World.LatestEnemy.Health) * 100 / Math.Max(1, World.LatestEnemy.MaxHealth))%"></div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Top Right: City Info -->
+    @if (World.SelectedCity != null)
+    {
+        <div style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.8); color:white; padding:15px; border-radius:8px; pointer-events:auto; min-width:200px;">
+            <h5>@World.SelectedCity.Name</h5>
+            <div class="mb-2">Population: @World.SelectedCity.Population</div>
+            <div class="progress mb-2" style="height:10px;">
+                <div class="progress-bar bg-success" style="width: @(World.SelectedCity.FoodStored * 10)%"></div>
+            </div>
+            <div class="small text-muted">Food: @World.SelectedCity.FoodStored / @(World.SelectedCity.Population * 10)</div>
+            
+            <hr style="border-color:white;"/>
+            <div class="mb-2">
+                Production: 
+                @if(World.SelectedCity.ProducingUnit.HasValue) { @World.SelectedCity.ProducingUnit }
+                else if(World.SelectedCity.ProducingBuilding.HasValue) { @World.SelectedCity.ProducingBuilding }
+                else { <span>Idle</span> }
+                
+                (@World.SelectedCity.ProductionStored)
+            </div>
+             <div class="progress mb-2" style="height:10px;">
+                <div class="progress-bar bg-warning" style="width: @(Math.Min(100, World.SelectedCity.ProductionStored * 10))%"></div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <span class="badge bg-secondary">Units</span>
+                <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Warrior)'>Warrior (10)</button>
+                <button class="btn btn-sm btn-primary" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Archer)'>Archer (15)</button>
+                <button class="btn btn-sm btn-success" @onclick='() => SetProductionUnit(BlazorCiv.Services.UnitType.Settler)'>Settler (20)</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-secondary">Buildings</span>
+                @if (!World.SelectedCity.HasMonument) { <button class="btn btn-sm btn-info" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Monument)'>Monument (8)</button> }
+                @if (!World.SelectedCity.HasGranary) { <button class="btn btn-sm btn-warning" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Granary)'>Granary (12)</button> }
+                @if (!World.SelectedCity.HasBarracks) { <button class="btn btn-sm btn-danger" @onclick='() => SetProductionBuilding(BlazorCiv.Services.BuildingType.Barracks)'>Barracks (15)</button> }
+            </div>
+
+            @if (World.SelectedCity.HasMonument || World.SelectedCity.HasGranary || World.SelectedCity.HasBarracks)
+            {
+                <hr style="border-color:white;"/>
+                <div class="small">
+                    Built: 
+                    @if(World.SelectedCity.HasMonument) { <span class="badge bg-info me-1">Monument</span> }
+                    @if(World.SelectedCity.HasGranary) { <span class="badge bg-warning me-1">Granary</span> }
+                    @if(World.SelectedCity.HasBarracks) { <span class="badge bg-danger me-1">Barracks</span> }
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Bottom Right: End Turn -->
+    <div style="position:absolute; bottom:20px; right:20px; z-index:100; display:flex; gap:10px; pointer-events:auto;">
+        <button class="btn btn-warning btn-lg" @onclick="EndTurn">End Turn @World.Turn ⏳</button>
+        <button class="btn btn-secondary btn-sm" @onclick="GenerateNewMap">New World</button>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(100); 
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("CivEngine.init", "civ-container", dotNetRef);
+            await GenerateNewMap();
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnHexClicked(int q, int r)
+    {
+        // 1. Logic: Select or Move
+        if (World.SelectedUnit == null)
+        {
+            World.SelectTile(q, r);
+        }
+        else
+        {
+            // If unit selected, try to move
+            bool moved = World.MoveSelectedUnit(q, r);
+            
+            // UX Polish: If move failed, decide whether to switch selection
+            if (!moved) 
+            {
+                // Calculate distance to click
+                var u = World.SelectedUnit;
+                int dist = (Math.Abs(u.Q - q) + Math.Abs(u.Q + u.R - q - r) + Math.Abs(u.R - r)) / 2;
+                
+                // Is there an enemy there?
+                var targetUnit = World.Units.FirstOrDefault(x => x.Q == q && x.R == r);
+                bool isEnemy = targetUnit != null && targetUnit.Owner != u.Owner;
+
+                // If clicking an adjacent enemy (trying to attack), preserve selection!
+                // This lets the user see "0 Moves" or retry without re-selecting.
+                if (dist <= 1 && isEnemy) 
+                {
+                    // Do nothing (Keep Unit Selected)
+                }
+                else
+                {
+                    // Otherwise (clicked terrain, distant unit, ally), switch selection
+                    World.SelectTile(q, r); 
+                }
+            } 
+        }
+
+        await RefreshView();
+        StateHasChanged(); // Update HUD
+    }
+
+    private async Task FoundCity()
+    {
+        World.FoundCity();
+        await RefreshView();
+        StateHasChanged();
+    }
+
+    private async Task EndTurn()
+    {
+        World.EndTurn();
+        await RefreshView();
+        StateHasChanged();
+    }
+
+    private void SetProductionUnit(BlazorCiv.Services.UnitType type)
+    {
+        if (World.SelectedCity != null)
+        {
+            World.SelectedCity.ProducingUnit = type;
+            World.SelectedCity.ProducingBuilding = null; // Exclusive
+            StateHasChanged();
+        }
+    }
+
+    private void SetProductionBuilding(BlazorCiv.Services.BuildingType type)
+    {
+        if (World.SelectedCity != null)
+        {
+            World.SelectedCity.ProducingBuilding = type;
+            World.SelectedCity.ProducingUnit = null; // Exclusive
+            StateHasChanged();
+        }
+    }
+
+    private async Task RefreshView()
+    {
+        // Units
+        var units = World.GetUnitData();
+        await JS.InvokeVoidAsync("CivEngine.renderUnits", new object[] { units });
+
+        // Cities
+        var cities = World.GetCityData();
+        await JS.InvokeVoidAsync("CivEngine.renderCities", new object[] { cities });
+    }
+
+    private async Task GenerateNewMap()
+    {
+        // 1. C# Logic
+        World.GenerateMap(12); // Radius 12
+        var data = World.GetRenderData();
+
+        // 2. JS Render
+        await JS.InvokeVoidAsync("CivEngine.renderMap", new object[] { data });
+        await RefreshView();
+    }
+}
